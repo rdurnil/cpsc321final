@@ -4,6 +4,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Service;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -98,6 +100,12 @@ public class MainActivity extends AppCompatActivity {
             pauseButton.setEnabled(false); //Toggling the pause button
             startButton.setEnabled(true); //Toggling the start button
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        startService();
     }
 
     public class BackgroundService extends Service {
