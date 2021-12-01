@@ -20,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
     Button startButton;
     Button pauseButton;
     Button resetButton;
+    Button runServiceButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +68,15 @@ public class MainActivity extends AppCompatActivity {
                 stopTimer(runnable); //Stopping the timer
             }
         });
+
+        //Run Service Button:
+        runServiceButton = findViewById(R.id.runServiceButton);
+        runServiceButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
     }
 
     /**
@@ -93,6 +103,9 @@ public class MainActivity extends AppCompatActivity {
     public class BackgroundService extends Service {
         @Override
         public int onStartCommand(Intent intent, int flags, int startId) {
+
+            //This is started by calling startService() which is called in onPause()
+
             return super.onStartCommand(intent, flags, startId);
         }
 
