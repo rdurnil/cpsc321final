@@ -4,6 +4,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -11,12 +12,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
+    public static final String TAG = "MainActivity";
     Handler handler = null;
     int seconds = 0;
 
@@ -25,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     Button resetButton;
     Button runServiceButton;
     Runnable runnable;
+    Intent serviceIntent;
 
     boolean serviceRunning;
 
@@ -91,8 +95,6 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "runServiceButton pressed", Toast.LENGTH_SHORT).show();
             }
         });
-
-
     }
 
     /**
@@ -121,10 +123,22 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
         stopTimer(runnable); //Stopping the timer everytime the app is closed
         //If the user pressed the runServiceButton the timer should continue even if it was stopped
-        if (serviceRunning) { //***THIS DOESN'T WORK YET
-            Intent intent = new Intent(MainActivity.this, BackgroundService.class);
-            intent.putExtra("seconds", seconds);
-            startService(intent);
+        if (serviceRunning) {
+            serviceIntent = new Intent(MainActivity.this, BackgroundService.class);
+            serviceIntent.putExtra("seconds", seconds);
+            startService(serviceIntent);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // stops the service from running
+        // TODO: figure out how to recieve value of the seconds from the service in order to set timer
+        if (serviceRunning) {
+            if (serviceIntent != null) {
+                stopService(serviceIntent);
+            }
         }
     }
 }
