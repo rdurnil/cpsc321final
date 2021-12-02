@@ -14,6 +14,7 @@ import android.os.Looper;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     Handler handler = null;
@@ -23,13 +24,16 @@ public class MainActivity extends AppCompatActivity {
     Button pauseButton;
     Button resetButton;
     Button runServiceButton;
+    Runnable runnable;
+
+    boolean serviceRunning;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Runnable runnable = new Runnable() {
+         runnable = new Runnable() {
             @Override
             public void run() {
                 updateSeconds(seconds + 1); //Updating timer text
@@ -72,13 +76,23 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //Run Service Button:
+        serviceRunning = false; //Set to false to start
         runServiceButton = findViewById(R.id.runServiceButton);
         runServiceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                if (serviceRunning) { //If the service is already running
+                    serviceRunning = false;
+                    Toast.makeText(MainActivity.this, "Service Ended, timer will stop on close", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(MainActivity.this, "Service Started, timer will continue on close", Toast.LENGTH_SHORT).show();
+                    serviceRunning = true;
+                }
+                Toast.makeText(MainActivity.this, "runServiceButton pressed", Toast.LENGTH_SHORT).show();
             }
         });
+
+
     }
 
     /**
@@ -105,14 +119,33 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        startService();
+        stopTimer(runnable); //Stopping the timer everytime the app is closed
+        //If the user pressed the runServiceButton the timer should continue even if it was stopped
+        if (serviceRunning) { //***THIS DOESN'T WORK YET
+            Intent intent = new Intent(MainActivity.this, BackgroundService.class);
+            startService(intent);
+        }
     }
 
     public class BackgroundService extends Service {
         @Override
         public int onStartCommand(Intent intent, int flags, int startId) {
 
-            //This is started by calling startService() which is called in onPause()
+            //This method should be starting the timer again and resuming it like normal
+            // it isn't doing that because stopTimer() is being called everytime the app is closed.
+            //What should be happening is onStartCommand() should "undo" this stopTimer() call
+            // and resume the timer anyways. I haven't figured out how to do this yet.
+
+            //This is started by calling startService() which is called in onStop()
+            //Same functionality as start button:
+            if (handler == null) {
+                handler = new Handler(Looper.getMainLooper());
+                handler.postDelayed(runnable, 1000);
+                startButton.setEnabled(false);
+                pauseButton.setEnabled(true);
+            }
+
+            Toast.makeText(MainActivity.this, "in onStartCommand", Toast.LENGTH_SHORT).show();
 
             return super.onStartCommand(intent, flags, startId);
         }
