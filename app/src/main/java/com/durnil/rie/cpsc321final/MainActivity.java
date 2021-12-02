@@ -1,18 +1,15 @@
 package com.durnil.rie.cpsc321final;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Service;
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -31,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
     Intent serviceIntent;
 
     boolean serviceRunning;
+    boolean serviceBound;
+    BackgroundService service;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
             serviceIntent = new Intent(MainActivity.this, BackgroundService.class);
             serviceIntent.putExtra("seconds", seconds);
             startService(serviceIntent);
+            bindService(serviceIntent, connection, Context.BIND_AUTO_CREATE);
         }
     }
 
@@ -134,11 +134,43 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         // stops the service from running
-        // TODO: figure out how to recieve value of the seconds from the service in order to set timer
+        // updates the seconds
         if (serviceRunning) {
             if (serviceIntent != null) {
                 stopService(serviceIntent);
             }
+            if (serviceBound) {
+                // get the seconds to set the timer to
+                seconds = service.getSeconds();
+                updateSeconds(seconds);
+                // restart the timer
+                if (handler == null) {
+                    handler = new Handler(Looper.getMainLooper());
+                    handler.postDelayed(runnable, 1000);
+                    startButton.setEnabled(false);
+                    pauseButton.setEnabled(true);
+                }
+            }
+            // unbind from the service
+            unbindService(connection);
         }
     }
+
+    private ServiceConnection connection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName className,
+                                       IBinder service) {
+            // Binding to the Background service and getting its instance
+            // in order to use public methods
+            BackgroundService.LocalBinder binder = (BackgroundService.LocalBinder) service;
+            MainActivity.this.service = binder.getService();
+            serviceBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            serviceBound = false;
+        }
+    };
 }

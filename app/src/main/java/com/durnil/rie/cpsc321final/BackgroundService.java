@@ -6,7 +6,6 @@ import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 
@@ -16,11 +15,10 @@ public class BackgroundService extends Service {
     Handler handler = null;
     int seconds = 0;
     int initialSeconds = 0;
-    Intent intent;
+    private final IBinder binder = new LocalBinder();
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        this.intent = intent; // attempt to get the intent to pass back values, not working
         initialSeconds = intent.getIntExtra("seconds", 0);
         return super.onStartCommand(intent, flags, startId);
     }
@@ -28,7 +26,7 @@ public class BackgroundService extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return null;
+        return binder;
     }
 
     @Override
@@ -51,12 +49,22 @@ public class BackgroundService extends Service {
 
     @Override
     public void onDestroy() {
-        // ends the timer, needs to pass back the seconds somehow
-        // TODO: figure out how to pass back the seconds
+        // ends the timer
         handler.removeCallbacks(runnable);
         handler = null;
-        intent.putExtra("secondsAfter", seconds + initialSeconds);
-        Log.d(TAG, "stopService: secondsAfter = " + (seconds+initialSeconds));
         super.onDestroy();
+    }
+
+    public int getSeconds() {
+        // returns the total seconds the timer should be set to
+        return seconds + initialSeconds;
+    }
+
+    public class LocalBinder extends Binder {
+        BackgroundService getService() {
+            // Returns this instance of the Background service so that the Main Activity
+            // can access it's public methods
+            return BackgroundService.this;
+        }
     }
 }
