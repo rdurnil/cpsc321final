@@ -16,7 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
-    public static final String TAG = "MainActivity";
+    /* public static final String TAG = "MainActivity";
     Handler handler = null;
     int seconds = 0;
 
@@ -29,14 +29,14 @@ public class MainActivity extends AppCompatActivity {
 
     boolean serviceRunning;
     boolean serviceBound;
-    BackgroundService service;
+    BackgroundService service; */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-         runnable = new Runnable() {
+         /*runnable = new Runnable() {
             @Override
             public void run() {
                 updateSeconds(seconds + 1); //Updating timer text
@@ -93,22 +93,22 @@ public class MainActivity extends AppCompatActivity {
                 }
                 Toast.makeText(MainActivity.this, "runServiceButton pressed", Toast.LENGTH_SHORT).show();
             }
-        });
+        });*/
     }
 
     /**
      * Function to update the seconds text:
      */
-    public void updateSeconds (int newSeconds) {
+   /* public void updateSeconds (int newSeconds) {
         seconds = newSeconds; //Updating seconds
         TextView tv = findViewById(R.id.secondsTextView);
         tv.setText("" + seconds);
-    }
+    }*/
 
     /**
      * Function to stop the timer:
      */
-    public void stopTimer (Runnable runnableParam) {
+    /*public void stopTimer (Runnable runnableParam) {
         if (handler != null) {
             handler.removeCallbacks(runnableParam);
             handler = null;
@@ -172,5 +172,5 @@ public class MainActivity extends AppCompatActivity {
         public void onServiceDisconnected(ComponentName arg0) {
             serviceBound = false;
         }
-    };
+    }; */
 }
