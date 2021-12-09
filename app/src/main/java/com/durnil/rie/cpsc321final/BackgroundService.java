@@ -36,7 +36,7 @@ public class BackgroundService extends Service {
         runnable = new Runnable() {
             @Override
             public void run() {
-                seconds++; //Updating timer text
+                seconds++; //Updating timer
                 handler.postDelayed(this, 1000); //Running runnable every second
             }
         };

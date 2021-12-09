@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/prevWorkoutMap"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/prevWorkoutNameTextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/prevWorkoutNameTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="8dp"
+        android:text="@string/workout_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/prevWorkoutMap"
+        android:gravity="center"/>
+
+    <TextView
+        android:id="@+id/prevWorkoutTimeLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/time"
+        app:layout_constraintBottom_toTopOf="@+id/prevWorkoutDistLabel"
+        app:layout_constraintEnd_toStartOf="@+id/prevWorkoutTimeValueTextView"
+        app:layout_constraintStart_toStartOf="@+id/prevWorkoutNameTextView"
+        app:layout_constraintTop_toBottomOf="@+id/prevWorkoutNameTextView" />
+
+    <TextView
+        android:id="@+id/prevWorkoutTimeValueTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="time data"
+        app:layout_constraintBottom_toBottomOf="@+id/prevWorkoutTimeLabel"
+        app:layout_constraintEnd_toEndOf="@+id/prevWorkoutNameTextView"
+        app:layout_constraintStart_toEndOf="@+id/prevWorkoutTimeLabel"
+        app:layout_constraintTop_toTopOf="@+id/prevWorkoutTimeLabel" />
+
+    <TextView
+        android:id="@+id/prevWorkoutDistLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="@string/distance"
+        app:layout_constraintBottom_toTopOf="@+id/prevWorkoutSpeedLabel"
+        app:layout_constraintEnd_toStartOf="@+id/prevWorkoutDistDataTextView"
+        app:layout_constraintStart_toStartOf="@+id/prevWorkoutTimeLabel"
+        app:layout_constraintTop_toBottomOf="@+id/prevWorkoutTimeLabel" />
+
+    <TextView
+        android:id="@+id/prevWorkoutDistDataTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="distance data"
+        app:layout_constraintBottom_toBottomOf="@+id/prevWorkoutDistLabel"
+        app:layout_constraintEnd_toEndOf="@+id/prevWorkoutTimeValueTextView"
+        app:layout_constraintStart_toEndOf="@+id/prevWorkoutDistLabel"
+        app:layout_constraintTop_toTopOf="@+id/prevWorkoutDistLabel" />
+
+    <TextView
+        android:id="@+id/prevWorkoutSpeedLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="@string/avg_speed"
+        app:layout_constraintBottom_toTopOf="@+id/prevWorkoutDeleteButton"
+        app:layout_constraintEnd_toStartOf="@+id/prevWorkoutSpeedDataTextView"
+        app:layout_constraintStart_toStartOf="@+id/prevWorkoutDistLabel"
+        app:layout_constraintTop_toBottomOf="@+id/prevWorkoutDistLabel" />
+
+    <TextView
+        android:id="@+id/prevWorkoutSpeedDataTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="@+id/prevWorkoutSpeedLabel"
+        app:layout_constraintEnd_toEndOf="@+id/prevWorkoutDistDataTextView"
+        app:layout_constraintStart_toEndOf="@+id/prevWorkoutSpeedLabel"
+        app:layout_constraintTop_toTopOf="@+id/prevWorkoutSpeedLabel" />
+
+    <Button
+        android:id="@+id/prevWorkoutDeleteButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="@string/delete"
+        app:layout_constraintBottom_toBottomOf="@+id/prevWorkoutBackButton"
+        app:layout_constraintEnd_toEndOf="@+id/prevWorkoutSpeedDataTextView"
+        app:layout_constraintStart_toEndOf="@+id/prevWorkoutBackButton"
+        app:layout_constraintTop_toTopOf="@+id/prevWorkoutBackButton" />
+
+    <Button
+        android:id="@+id/prevWorkoutBackButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="16dp"
+        android:text="@string/back"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/prevWorkoutDeleteButton"
+        app:layout_constraintStart_toStartOf="@+id/prevWorkoutSpeedLabel"
+        app:layout_constraintTop_toBottomOf="@+id/prevWorkoutSpeedLabel" />
+</androidx.constraintlayout.widget.ConstraintLayout>
