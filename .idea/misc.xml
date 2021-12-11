@@ -4,10 +4,12 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/jaymi/AndroidStudioProjects/cpsc321final/app/src/main/res/layout/activity_in_progress_workout.xml" value="0.30104166666666665" />
+        <entry key="..\:/Users/jaymi/AndroidStudioProjects/cpsc321final/app/src/main/res/layout/activity_main.xml" value="0.2604166666666667" />
         <entry key="..\:/Users/jaymi/AndroidStudioProjects/cpsc321final/app/src/main/res/layout/activity_new_workout.xml" value="0.30104166666666665" />
         <entry key="..\:/Users/jaymi/AndroidStudioProjects/cpsc321final/app/src/main/res/layout/activity_prev_workout_selection.xml" value="0.29791666666666666" />
         <entry key="..\:/Users/jaymi/AndroidStudioProjects/cpsc321final/app/src/main/res/layout/activity_view_prev_workout.xml" value="0.30104166666666665" />
         <entry key="..\:/Users/jaymi/AndroidStudioProjects/cpsc321final/app/src/main/res/layout/item_prev_workouts.xml" value="0.29791666666666666" />
+        <entry key="..\:/Users/jaymi/AndroidStudioProjects/cpsc321final/app/src/main/res/layout/list_item_prev_workouts.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.165" />
       </map>
     </option>

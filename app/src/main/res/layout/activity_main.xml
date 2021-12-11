@@ -6,63 +6,29 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/secondsTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:text="0"
-        android:textSize="34sp"
-        app:layout_constraintBottom_toTopOf="@+id/pauseButton"
-        app:layout_constraintEnd_toEndOf="@+id/pauseButton"
-        app:layout_constraintStart_toStartOf="@+id/pauseButton" />
-
     <Button
-        android:id="@+id/startButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
-        android:text="Start"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/pauseButton"
-        app:layout_constraintHorizontal_bias="0.5"
+        android:id="@+id/newWorkoutButton"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="240dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="75dp"
+        android:text="@string/new_workout"
+        app:layout_constraintBottom_toTopOf="@+id/prevWorkoutsButton"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/pauseButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Pause"
-        app:layout_constraintBottom_toBottomOf="@+id/startButton"
-        app:layout_constraintEnd_toStartOf="@+id/resetButton"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/startButton"
-        app:layout_constraintTop_toTopOf="@+id/startButton" />
-
-    <Button
-        android:id="@+id/resetButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Reset"
-        app:layout_constraintBottom_toBottomOf="@+id/pauseButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/pauseButton"
-        app:layout_constraintTop_toTopOf="@+id/pauseButton" />
-
-    <Button
-        android:id="@+id/runServiceButton"
+        android:id="@+id/prevWorkoutsButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:text="@string/start_service"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/startButton" />
-
+        android:layout_marginTop="75dp"
+        android:layout_marginBottom="320dp"
+        android:text="@string/prev_workouts"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/newWorkoutButton"
+        app:layout_constraintStart_toStartOf="@+id/newWorkoutButton"
+        app:layout_constraintTop_toBottomOf="@+id/newWorkoutButton" />
 </androidx.constraintlayout.widget.ConstraintLayout>

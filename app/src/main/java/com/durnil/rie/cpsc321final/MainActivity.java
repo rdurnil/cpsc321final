@@ -46,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Button newWorkoutButton = findViewById(R.id.newWorkoutButton);
+        Button prevWorkoutsButton = findViewById(R.id.prevWorkoutsButton);
         enableMyLocation();
     }
 
@@ -134,8 +136,8 @@ public class MainActivity extends AppCompatActivity {
                 }
                 Toast.makeText(MainActivity.this, "runServiceButton pressed", Toast.LENGTH_SHORT).show();
             }
-        });
-    }*/
+        });*/
+    }
 
     /**
      * Function to update the seconds text:
