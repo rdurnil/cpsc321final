@@ -13,4 +13,6 @@
     <string name="enter_workout_name">Enter Workout Name</string>
     <string name="select_workout">Select A Past Workout:</string>
     <string name="workout_date">WORKOUT DATE</string>
+    <string name="new_workout">New Workout</string>
+    <string name="prev_workouts">Previous Workouts</string>
 </resources>

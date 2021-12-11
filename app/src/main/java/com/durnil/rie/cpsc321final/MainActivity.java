@@ -36,6 +36,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Button newWorkoutButton = findViewById(R.id.newWorkoutButton);
+        Button prevWorkoutsButton = findViewById(R.id.prevWorkoutsButton);
+
+
+
          /*runnable = new Runnable() {
             @Override
             public void run() {
