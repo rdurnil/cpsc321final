@@ -152,5 +152,6 @@ public class WorkoutOpenHelper extends SQLiteOpenHelper {
          SQLiteDatabase db = getWritableDatabase();
          db.delete(WORKOUT_TABLE, ID + "=?", new String[]{"" + id});
          db.close();
+         updateWorkoutIds();
     }
 }
