@@ -9,4 +9,6 @@
     <string name="avg_speed">Average Speed:</string>
     <string name="delete">Delete</string>
     <string name="back">Back</string>
+    <string name="save">Save</string>
+    <string name="enter_workout_name">Enter Workout Name</string>
 </resources>
