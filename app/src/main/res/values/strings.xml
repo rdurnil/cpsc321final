@@ -11,4 +11,5 @@
     <string name="back">Back</string>
     <string name="save">Save</string>
     <string name="enter_workout_name">Enter Workout Name</string>
+    <string name="select_workout">Select A Past Workout:</string>
 </resources>
