@@ -14,6 +14,10 @@
         android:theme="@style/Theme.Cpsc321final">
 
         <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
@@ -26,6 +30,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".endWorkoutActivity"/>
+        <activity android:name=".InProgressWorkoutActivity"/>
+        <activity android:name=".NewWorkoutActivity"/>
+        <activity android:name=".PrevWorkoutViewActivity"/>
+        <activity android:name=".PrevWorkoutsActivity"/>
         <service android:name="BackgroundService" />
     </application>
 
