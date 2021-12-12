@@ -64,7 +64,6 @@ public class InProgressWorkoutActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-    }
 
         locations = new ArrayList<>();
         fusedLocationProviderClient = new FusedLocationProviderClient(this);
