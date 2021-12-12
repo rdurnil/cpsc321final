@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +15,10 @@ public class WorkoutOpenHelper extends SQLiteOpenHelper {
     static final String DATABASE_NAME = "workoutDatabase.db";
     static final int DATABASE_VERSION = 1;
 
+    static final String LATLNG_TABLE = "latLngTable";
+    static final String LATITUDE = "latitude";
+    static final String LONGITUDE = "longitude";
+    static final String ORDER_NUM = "order_num";
     static final String WORKOUT_TABLE = "workoutTable";
     static final String ID = "_id";
     static final String NAME = "name";
@@ -37,8 +43,18 @@ public class WorkoutOpenHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         String sqlCreate = "CREATE TABLE " + WORKOUT_TABLE + "(" +
                 ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                NAME + " TEXT, " + TYPE + " TEXT, " + DATE + " TEXT, "
-                + TIME + " INTEGER, " + DISTANCE + " DOUBLE)";
+                NAME + " TEXT, " +
+                TYPE + " TEXT, " +
+                DATE + " TEXT, " +
+                TIME + " INTEGER, " +
+                DISTANCE + " DOUBLE);";
+
+        sqlCreate += "CREATE TABLE " + LATLNG_TABLE + "(" +
+                ID + " INTEGER PRIMARY KEY, " +
+                LATITUDE + " FLOAT, " +
+                LONGITUDE + " FLOAT, " +
+                ORDER_NUM + " INT);";
+
         sqLiteDatabase.execSQL(sqlCreate);
     }
 
@@ -152,6 +168,53 @@ public class WorkoutOpenHelper extends SQLiteOpenHelper {
          SQLiteDatabase db = getWritableDatabase();
          db.delete(WORKOUT_TABLE, ID + "=?", new String[]{"" + id});
          db.close();
+         deleteLatLangById(id);
          updateWorkoutIds();
+    }
+
+    /**
+     * Inserts a new lat lng into LATLANG table using workout id
+     */
+    public void insertLatLng(int id, LatLng latLng, int orderNum) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ID, id);
+        contentValues.put(LATITUDE, latLng.latitude);
+        contentValues.put(LONGITUDE, latLng.longitude);
+        contentValues.put(ORDER_NUM, orderNum);
+
+        SQLiteDatabase db = getWritableDatabase();
+        db.insert(LATLNG_TABLE, null, contentValues);
+        db.close();
+    }
+
+    /**
+     * Deletes all the entries of a specific workout
+     */
+    public void deleteLatLangById(int id) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete(LATLNG_TABLE, ID + "=?", new String[]{"" + id});
+        db.close();
+    }
+
+    /**
+     * Returns all of the latlangs of workout by id
+     */
+    public List<LatLng> getLatLangsById(int id) {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.query(LATLNG_TABLE,
+                new String[]{ID, LATITUDE, LONGITUDE, ORDER_NUM},
+                ID + "=?", new String[]{"" + id},
+                null, null, null);
+        List<LatLng> latLngs = new ArrayList<>();
+        LatLng temp;
+        while (cursor.moveToNext()) {
+            int tempId = cursor.getInt(1);
+            Double latitude = cursor.getDouble(2);
+            Double longitude = cursor.getDouble(3);
+            int orderNum = cursor.getInt(4);
+            temp = new LatLng(latitude, longitude);
+            latLngs.add(temp);
+        }
+        return latLngs;
     }
 }

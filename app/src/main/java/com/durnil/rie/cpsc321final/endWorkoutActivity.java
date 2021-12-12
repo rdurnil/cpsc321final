@@ -25,7 +25,6 @@ import com.google.android.gms.maps.model.PolylineOptions;
  *  entering it as a new entry into the database
  */
 public class endWorkoutActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnPolylineClickListener {
-    MapView mapView;
     Spinner typeSpinner;
     TextView workoutName;
     TextView timeTV;
@@ -43,7 +42,6 @@ public class endWorkoutActivity extends AppCompatActivity implements OnMapReadyC
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.endMap);
         mapFragment.getMapAsync(this);
         //Setting up the views:
-//        mapView = findViewById(R.id.endMap);
         workoutName = findViewById(R.id.workoutNameEditText);
         timeTV = findViewById(R.id.newWorkoutTimeValueTextView);
         distanceTV = findViewById(R.id.newWorkoutDistDataTextView);
@@ -67,6 +65,7 @@ public class endWorkoutActivity extends AppCompatActivity implements OnMapReadyC
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         Polyline route = googleMap.addPolyline(new PolylineOptions().clickable(false).add(
+                //THESE ARE TEST VALUES
                 new LatLng(-35.016, 143.321),
                 new LatLng(-34.747, 145.592),
                 new LatLng(-34.364, 147.891),

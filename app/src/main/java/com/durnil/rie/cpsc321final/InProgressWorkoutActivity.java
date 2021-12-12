@@ -80,8 +80,8 @@ public class InProgressWorkoutActivity extends AppCompatActivity {
                     Log.d(TAG, "onLocationResult: " + location.getLatitude() + ", " + location.getLongitude());
                 }
             };
-            fusedLocationProviderClient.requestLocationUpdates(LocationRequest.create()
-                    .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY).setInterval(5), locationCallback, handler.getLooper());
+//            fusedLocationProviderClient.requestLocationUpdates(LocationRequest.create()
+//                    .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY).setInterval(5), locationCallback, handler.getLooper());
         } else {
             // need to request permission
             ActivityCompat.requestPermissions(this,
