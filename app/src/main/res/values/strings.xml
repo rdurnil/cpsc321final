@@ -20,4 +20,6 @@
         <item>Bike</item>
         <item>Run</item>
     </string-array>
+    <string name="pause">Pause</string>
+    <string name="resume">Resume</string>
 </resources>

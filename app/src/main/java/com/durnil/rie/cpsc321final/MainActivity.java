@@ -144,8 +144,8 @@ public class MainActivity extends AppCompatActivity {
                 }
                 Toast.makeText(MainActivity.this, "runServiceButton pressed", Toast.LENGTH_SHORT).show();
             }
-        });*/
-    }
+        });
+    }*/
 
     /**
      * Function to update the seconds text:
