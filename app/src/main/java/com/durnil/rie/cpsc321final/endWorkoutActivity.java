@@ -43,7 +43,7 @@ public class endWorkoutActivity extends AppCompatActivity implements OnMapReadyC
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.endMap);
         mapFragment.getMapAsync(this);
         //Setting up the views:
-        mapView = findViewById(R.id.endMap);
+//        mapView = findViewById(R.id.endMap);
         workoutName = findViewById(R.id.workoutNameEditText);
         timeTV = findViewById(R.id.newWorkoutTimeValueTextView);
         distanceTV = findViewById(R.id.newWorkoutDistDataTextView);
