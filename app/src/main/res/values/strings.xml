@@ -15,4 +15,6 @@
     <string name="workout_date">WORKOUT DATE</string>
     <string name="new_workout">New Workout</string>
     <string name="prev_workouts">Previous Workouts</string>
+    <string name="pause">Pause</string>
+    <string name="resume">Resume</string>
 </resources>

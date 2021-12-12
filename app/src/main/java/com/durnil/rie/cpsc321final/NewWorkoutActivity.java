@@ -28,45 +28,5 @@ import java.util.List;
 
 public class NewWorkoutActivity extends AppCompatActivity {
 
-    private FusedLocationProviderClient fusedLocationProviderClient;
-    private static final int LOCATION_REQUEST_CODE = 1;
-    private List<LatLng> locations;
-    private static final String TAG = "WorkoutAppTag";
-
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_workout);
-
-        locations = new ArrayList<>();
-
-        Handler handler = new Handler(Looper.getMainLooper());
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                handler.postDelayed(this, 5000);
-            }
-        };
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            LocationCallback locationCallback = new LocationCallback() {
-                @Override
-                public void onLocationResult(@NonNull LocationResult locationResult) {
-                    super.onLocationResult(locationResult);
-                    Location location = locationResult.getLastLocation();
-                    locations.add(new LatLng(location.getLatitude(), location.getLongitude()));
-                    Log.d(TAG, "onLocationResult: " + location.getLatitude() + ", " + location.getLongitude());
-                }
-            };
-            fusedLocationProviderClient.requestLocationUpdates(LocationRequest.create()
-                    .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY).setInterval(5), locationCallback, handler.getLooper());
-        } else {
-            // need to request permission
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    LOCATION_REQUEST_CODE);
-        }
-    }
 
 }
