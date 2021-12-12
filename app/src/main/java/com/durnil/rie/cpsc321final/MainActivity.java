@@ -49,6 +49,14 @@ public class MainActivity extends AppCompatActivity {
         Button newWorkoutButton = findViewById(R.id.newWorkoutButton);
         Button prevWorkoutsButton = findViewById(R.id.prevWorkoutsButton);
         enableMyLocation();
+
+        newWorkoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, NewWorkoutActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void enableMyLocation() {
@@ -216,4 +224,3 @@ public class MainActivity extends AppCompatActivity {
             serviceBound = false;
         }
     }; */
-}
