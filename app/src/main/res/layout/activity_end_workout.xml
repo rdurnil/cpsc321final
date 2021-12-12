@@ -12,7 +12,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/workoutNameEditText"
+        app:layout_constraintBottom_toTopOf="@+id/typeSpinner"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,15 +23,15 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:textSize="32dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
+        android:gravity="center"
         android:hint="@string/enter_workout_name"
+        android:textSize="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/newWorkoutMap"
-        android:gravity="center"/>
+        app:layout_constraintTop_toBottomOf="@+id/typeSpinner" />
 
     <TextView
         android:id="@+id/newWorkoutTimeLabel"
@@ -90,7 +90,7 @@
         android:layout_marginEnd="8dp"
         android:text="@string/avg_speed"
         android:textSize="24dp"
-        app:layout_constraintBottom_toTopOf="@+id/newWorkoutDeleteButton"
+        app:layout_constraintBottom_toTopOf="@+id/newWorkoutSaveButton"
         app:layout_constraintEnd_toStartOf="@+id/newWorkoutSpeedDataTextView"
         app:layout_constraintStart_toStartOf="@+id/newWorkoutDistLabel"
         app:layout_constraintTop_toBottomOf="@+id/newWorkoutDistLabel" />
@@ -107,19 +107,19 @@
         app:layout_constraintTop_toTopOf="@+id/newWorkoutSpeedLabel" />
 
     <Button
-        android:id="@+id/newWorkoutDeleteButton"
+        android:id="@+id/newWorkoutSaveButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="@string/save"
         android:textSize="18dp"
-        app:layout_constraintBottom_toBottomOf="@+id/newWorkoutBackButton"
+        app:layout_constraintBottom_toBottomOf="@+id/newWorkoutDeleteButton"
         app:layout_constraintEnd_toEndOf="@+id/newWorkoutSpeedDataTextView"
-        app:layout_constraintStart_toEndOf="@+id/newWorkoutBackButton"
-        app:layout_constraintTop_toTopOf="@+id/newWorkoutBackButton" />
+        app:layout_constraintStart_toEndOf="@+id/newWorkoutDeleteButton"
+        app:layout_constraintTop_toTopOf="@+id/newWorkoutDeleteButton" />
 
     <Button
-        android:id="@+id/newWorkoutBackButton"
+        android:id="@+id/newWorkoutDeleteButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -128,7 +128,19 @@
         android:text="@string/delete"
         android:textSize="18dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/newWorkoutDeleteButton"
+        app:layout_constraintEnd_toStartOf="@+id/newWorkoutSaveButton"
         app:layout_constraintStart_toStartOf="@+id/newWorkoutSpeedLabel"
         app:layout_constraintTop_toBottomOf="@+id/newWorkoutSpeedLabel" />
+
+    <Spinner
+        android:id="@+id/typeSpinner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+
+        app:layout_constraintBottom_toTopOf="@+id/workoutNameEditText"
+        app:layout_constraintEnd_toEndOf="@+id/newWorkoutMap"
+        app:layout_constraintStart_toStartOf="@+id/newWorkoutMap"
+        app:layout_constraintTop_toBottomOf="@+id/newWorkoutMap" />
 </androidx.constraintlayout.widget.ConstraintLayout>

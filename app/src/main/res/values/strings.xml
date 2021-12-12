@@ -15,4 +15,9 @@
     <string name="workout_date">WORKOUT DATE</string>
     <string name="new_workout">New Workout</string>
     <string name="prev_workouts">Previous Workouts</string>
+    <string-array name="types_array">
+        <item>Hike</item>
+        <item>Bike</item>
+        <item>Run</item>
+    </string-array>
 </resources>
