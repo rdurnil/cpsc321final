@@ -57,6 +57,14 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        prevWorkoutsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, PrevWorkoutsActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void enableMyLocation() {
@@ -225,4 +233,3 @@ public class MainActivity extends AppCompatActivity {
             serviceBound = false;
         }
     }; */
-}

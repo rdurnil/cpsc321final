@@ -38,6 +38,7 @@ public class endWorkoutActivity extends AppCompatActivity implements OnMapReadyC
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_end_workout);
+        helper = new WorkoutOpenHelper(this);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.endMap);
         mapFragment.getMapAsync(this);
@@ -74,6 +75,7 @@ public class endWorkoutActivity extends AppCompatActivity implements OnMapReadyC
                 new LatLng(-32.491, 147.309)
         ));
 
+        //Update this to use the first lat lng and closer zoom (10?)
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(-23.684, 133.903), 4));
 
         googleMap.setOnPolylineClickListener(this);
