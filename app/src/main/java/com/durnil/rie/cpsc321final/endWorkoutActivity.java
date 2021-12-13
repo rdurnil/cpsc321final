@@ -1,11 +1,13 @@
 package com.durnil.rie.cpsc321final;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -39,6 +41,7 @@ public class endWorkoutActivity extends AppCompatActivity implements OnMapReadyC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_end_workout);
 
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.endMap);
         mapFragment.getMapAsync(this);
         //Setting up the views:
@@ -53,6 +56,16 @@ public class endWorkoutActivity extends AppCompatActivity implements OnMapReadyC
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.types_array, android.R.layout.simple_spinner_dropdown_item);
         typeSpinner.setAdapter(adapter);
+
+        Intent intent = getIntent();
+        if (intent != null) {
+            String time = intent.getStringExtra("time");
+            double distance = intent.getDoubleExtra("distance", 0.0);
+            double avgSpeed = intent.getDoubleExtra("avgSpeed", 0.0);
+            timeTV.setText(time);
+            distanceTV.setText(distance + " miles");
+            avgSpeedTV.setText(avgSpeed + " mi/min");
+        }
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override

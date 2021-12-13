@@ -225,4 +225,3 @@ public class MainActivity extends AppCompatActivity {
             serviceBound = false;
         }
     }; */
-}
