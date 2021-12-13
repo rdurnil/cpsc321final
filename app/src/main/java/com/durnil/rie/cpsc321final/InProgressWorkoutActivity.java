@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -18,9 +19,11 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -31,8 +34,10 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class InProgressWorkoutActivity extends AppCompatActivity {
     Button endButton;
@@ -44,6 +49,7 @@ public class InProgressWorkoutActivity extends AppCompatActivity {
     Button pauseButton;
     Runnable timerRunnable;
     Runnable locationRunnable;
+    LocationCallback locationCallback;
     Intent serviceIntent;
 
     boolean serviceBound;
@@ -57,25 +63,6 @@ public class InProgressWorkoutActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_in_progress_workout);
-
-        endButton = findViewById(R.id.inProgEndButton);
-
-        endButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(InProgressWorkoutActivity.this, endWorkoutActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        locations = new ArrayList<>();
-        fusedLocationProviderClient = new FusedLocationProviderClient(this);
-
-        handler = new Handler(Looper.getMainLooper());
-        // start timer immediately since they already pressed start
-        handler.postDelayed(timerRunnable, 1000);
-        FetchCurrentLocationsTask asyncTask = new FetchCurrentLocationsTask();
-        asyncTask.execute();
 
         timerRunnable = new Runnable() {
             @Override
@@ -93,30 +80,71 @@ public class InProgressWorkoutActivity extends AppCompatActivity {
             }
         };
 
+        handler = new Handler(Looper.getMainLooper());
+        handler.postDelayed(timerRunnable, 1000);
+
         //Pause Button:
         pauseButton = findViewById(R.id.inProgPauseButton);
-        if (pauseButton.getText().toString().equals(R.string.pause)) {
-            pauseButton.setText(R.string.resume);
-            pauseButton.setOnClickListener(new View.OnClickListener() {
+        pauseButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    handler.removeCallbacks(timerRunnable);
-                    handler.removeCallbacks(locationRunnable);
-                    handler = null;
-                }
-            });
-        } else {
-            pauseButton.setText(R.string.pause);
-            pauseButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (handler == null) {
-                        handler = new Handler(Looper.getMainLooper());
-                        handler.postDelayed(timerRunnable, 1000);
-                        asyncTask.execute();
+                    Toast.makeText(InProgressWorkoutActivity.this, "pause button", Toast.LENGTH_SHORT).show();
+                    if (pauseButton.getText().toString().equals("Pause")) {
+                        pauseButton.setText(R.string.resume);
+                        handler.removeCallbacks(timerRunnable);
+                        handler.removeCallbacks(locationRunnable);
+                        if (locationCallback != null) {
+                            fusedLocationProviderClient.removeLocationUpdates(locationCallback);
+                        }
+                        handler = null;
+                    } else {
+                        pauseButton.setText(R.string.pause);
+                        if (handler == null) {
+                            handler = new Handler(Looper.getMainLooper());
+                            handler.postDelayed(timerRunnable, 1000);
+                           // fusedLocationProviderClient.requestLocationUpdates(LocationRequest.create()
+                             //       .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY).setInterval(5000), locationCallback, handler.getLooper());
+                        }
                     }
                 }
             });
+
+        endButton = findViewById(R.id.inProgEndButton);
+        endButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(InProgressWorkoutActivity.this, endWorkoutActivity.class);
+                intent.putExtra("time", formatSeconds());
+                intent.putExtra("distance", distance);
+                intent.putExtra("avgSpeed", avgSpeed);
+                startActivity(intent);
+            }
+        });
+
+        locations = new ArrayList<>();
+        fusedLocationProviderClient = new FusedLocationProviderClient(this);
+
+        if (ContextCompat.checkSelfPermission(InProgressWorkoutActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            LocationCallback locationCallback = new LocationCallback() {
+                @Override
+                public void onLocationResult(@NonNull LocationResult locationResult) {
+                    super.onLocationResult(locationResult);
+
+                    Location location = locationResult.getLastLocation();
+                    locations.add(new LatLng(location.getLatitude(), location.getLongitude()));
+                    updateDistance();
+                    updateAvgSpeed();
+                    Log.d(TAG, "onLocationResult: " + location.getLatitude() + ", " + location.getLongitude());
+                }
+            };
+            fusedLocationProviderClient.requestLocationUpdates(LocationRequest.create()
+                    .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY).setInterval(5000), locationCallback, handler.getLooper());
+        } else {
+            // need to request permission
+            ActivityCompat.requestPermissions(InProgressWorkoutActivity.this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    LOCATION_REQUEST_CODE);
         }
     }
 
@@ -138,8 +166,9 @@ public class InProgressWorkoutActivity extends AppCompatActivity {
         int hours = this.seconds / 3600;
         int minutes = (this.seconds % 3600) / 60;
         int seconds = this.seconds % 60;
-        return hours + ":" + minutes + ":" + seconds;
-        // TODO: figure out how to add zeros if int is less than 10
+        String time = String.format(Locale.getDefault(),
+                "%02d:%02d:%02d", hours, minutes, seconds);
+        return time;
     }
 
     private void updateDistance() {
@@ -180,7 +209,7 @@ public class InProgressWorkoutActivity extends AppCompatActivity {
         }
     };
 
-    class FetchCurrentLocationsTask extends AsyncTask<Void, Void, Void> {
+   /* class FetchCurrentLocationsTask extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected Void doInBackground(Void... voids) {
@@ -208,5 +237,5 @@ public class InProgressWorkoutActivity extends AppCompatActivity {
             }
             return null;
         }
-    }
+    }*/
 }
