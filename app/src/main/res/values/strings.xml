@@ -30,4 +30,5 @@
     <string name="distance_data">distance data</string>
     <string name="avg_speed_data">avg speed data</string>
     <string name="start_workout">Start Workout</string>
+    <string name="start_new_workout">NEW WORKOUT</string>
 </resources>
