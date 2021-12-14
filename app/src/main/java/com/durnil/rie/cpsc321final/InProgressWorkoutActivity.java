@@ -1,7 +1,10 @@
 package com.durnil.rie.cpsc321final;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.PendingIntent;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
@@ -34,7 +37,6 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.maps.model.LatLng;
 
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -64,28 +66,48 @@ public class InProgressWorkoutActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_in_progress_workout);
 
-        timerRunnable = new Runnable() {
-            @Override
-            public void run() {
-                updateSeconds(seconds + 1); //Updating timer text
-                handler.postDelayed(this, 1000); //Running runnable every second
-            }
-        };
+        if (ContextCompat.checkSelfPermission(InProgressWorkoutActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            timerRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    updateSeconds(seconds + 1); //Updating timer text
+                    handler.postDelayed(this, 1000); //Running runnable every second
+                }
+            };
 
-        locationRunnable = new Runnable() {
-            @Override
-            public void run() {
-                updateDistance();
-                updateAvgSpeed();
-            }
-        };
+            locations = new ArrayList<>();
+            fusedLocationProviderClient = new FusedLocationProviderClient(this);
 
-        handler = new Handler(Looper.getMainLooper());
-        handler.postDelayed(timerRunnable, 1000);
+            locationCallback = new LocationCallback() {
+                @Override
+                public void onLocationResult(@NonNull LocationResult locationResult) {
+                    super.onLocationResult(locationResult);
 
-        //Pause Button:
-        pauseButton = findViewById(R.id.inProgPauseButton);
-        pauseButton.setOnClickListener(new View.OnClickListener() {
+                    Location location = locationResult.getLastLocation();
+                    locations.add(new LatLng(location.getLatitude(), location.getLongitude()));
+                    updateDistance();
+                    updateAvgSpeed();
+                    Log.d(TAG, "onLocationResult: " + location.getLatitude() + ", " + location.getLongitude());
+                }
+            };
+
+            locationRunnable = new Runnable() {
+                @SuppressLint("MissingPermission")
+                @Override
+                public void run() {
+                    fusedLocationProviderClient.requestLocationUpdates(LocationRequest.create()
+                            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY).setInterval(5000), locationCallback, handler.getLooper());
+                }
+            };
+
+            handler = new Handler(Looper.getMainLooper());
+            handler.postDelayed(timerRunnable, 1000);
+            handler.postDelayed(locationRunnable, 5000);
+
+            //Pause Button:
+            pauseButton = findViewById(R.id.inProgPauseButton);
+            pauseButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(InProgressWorkoutActivity.this, "pause button", Toast.LENGTH_SHORT).show();
@@ -102,44 +124,32 @@ public class InProgressWorkoutActivity extends AppCompatActivity {
                         if (handler == null) {
                             handler = new Handler(Looper.getMainLooper());
                             handler.postDelayed(timerRunnable, 1000);
-                           // fusedLocationProviderClient.requestLocationUpdates(LocationRequest.create()
-                             //       .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY).setInterval(5000), locationCallback, handler.getLooper());
+                            handler.postDelayed(locationRunnable, 5000);
                         }
                     }
                 }
             });
 
-        endButton = findViewById(R.id.inProgEndButton);
-        endButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(InProgressWorkoutActivity.this, endWorkoutActivity.class);
-                intent.putExtra("time", formatSeconds());
-                intent.putExtra("distance", distance);
-                intent.putExtra("avgSpeed", avgSpeed);
-                startActivity(intent);
-            }
-        });
-
-        locations = new ArrayList<>();
-        fusedLocationProviderClient = new FusedLocationProviderClient(this);
-
-        if (ContextCompat.checkSelfPermission(InProgressWorkoutActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            LocationCallback locationCallback = new LocationCallback() {
+            endButton = findViewById(R.id.inProgEndButton);
+            endButton.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onLocationResult(@NonNull LocationResult locationResult) {
-                    super.onLocationResult(locationResult);
+                public void onClick(View view) {
+                    if (handler != null) {
+                        handler.removeCallbacks(timerRunnable);
+                        handler.removeCallbacks(locationRunnable);
+                    }
+                    if (locationCallback != null) {
+                        fusedLocationProviderClient.removeLocationUpdates(locationCallback);
+                    }
+                    handler = null;
 
-                    Location location = locationResult.getLastLocation();
-                    locations.add(new LatLng(location.getLatitude(), location.getLongitude()));
-                    updateDistance();
-                    updateAvgSpeed();
-                    Log.d(TAG, "onLocationResult: " + location.getLatitude() + ", " + location.getLongitude());
+                    Intent intent = new Intent(InProgressWorkoutActivity.this, endWorkoutActivity.class);
+                    intent.putExtra("time", formatSeconds());
+                    intent.putExtra("distance", distance);
+                    intent.putExtra("avgSpeed", avgSpeed);
+                    startActivity(intent);
                 }
-            };
-            fusedLocationProviderClient.requestLocationUpdates(LocationRequest.create()
-                    .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY).setInterval(5000), locationCallback, handler.getLooper());
+            });
         } else {
             // need to request permission
             ActivityCompat.requestPermissions(InProgressWorkoutActivity.this,
@@ -148,15 +158,10 @@ public class InProgressWorkoutActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
     /**
-    * Function to update the seconds text:
-    */
-    public void updateSeconds (int newSeconds) {
+     * Function to update the seconds text:
+     */
+    public void updateSeconds(int newSeconds) {
         seconds = newSeconds; //Updating seconds
         TextView tv = findViewById(R.id.timeDisplayTextView);
         tv.setText(formatSeconds());
@@ -179,16 +184,51 @@ public class InProgressWorkoutActivity extends AppCompatActivity {
             LatLng location2 = locations.get(locations.size() - 1);
             double latDiff = location2.latitude - location1.latitude;
             double lngDiff = location2.longitude - location1.longitude;
-            distance += Math.sqrt(Math.pow(latDiff, 2) + Math.pow(lngDiff, 2));
+            distance += ((Math.sqrt(Math.pow(latDiff, 2) + Math.pow(lngDiff, 2))) * 69.2);
         }
         TextView tv = findViewById(R.id.distanceDisplayTextView);
-        tv.setText(distance + " miles");
+        tv.setText(String.format("%.2f", distance) + " miles");
     }
 
     private void updateAvgSpeed() {
-        avgSpeed = distance / (seconds % 60);
+        avgSpeed = distance / ((double) seconds / 60.0);
         TextView tv = findViewById(R.id.avgSpeedDisplayTextView);
-        tv.setText(avgSpeed + "mi/min");
+        tv.setText(String.format("%.2f", avgSpeed) + " mi/min");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        //If the user pressed the runServiceButton the timer should continue even if it was stopped
+        serviceIntent = new Intent(InProgressWorkoutActivity.this, BackgroundService.class);
+        serviceIntent.putExtra("seconds", seconds);
+        startService(serviceIntent);
+        bindService(serviceIntent, connection, Context.BIND_AUTO_CREATE);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (serviceIntent != null) {
+            stopService(serviceIntent);
+        }
+        if (serviceBound) {
+            // get the seconds to set the timer to
+            seconds = service.getSeconds();
+            locations.addAll(service.getLocations());
+            distance = distance + service.getDistance();
+            updateSeconds(seconds);
+            updateDistance();
+            updateAvgSpeed();
+            // restart the timer
+            if (handler == null) {
+                handler = new Handler(Looper.getMainLooper());
+                handler.postDelayed(timerRunnable, 1000);
+                handler.postDelayed(locationRunnable, 5000);
+            }
+            // unbind from the service
+            unbindService(connection);
+        }
     }
 
     private ServiceConnection connection = new ServiceConnection() {
@@ -208,34 +248,4 @@ public class InProgressWorkoutActivity extends AppCompatActivity {
             serviceBound = false;
         }
     };
-
-   /* class FetchCurrentLocationsTask extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            if (ContextCompat.checkSelfPermission(InProgressWorkoutActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)
-                    == PackageManager.PERMISSION_GRANTED) {
-                LocationCallback locationCallback = new LocationCallback() {
-                    @Override
-                    public void onLocationResult(@NonNull LocationResult locationResult) {
-                        super.onLocationResult(locationResult);
-
-                        Location location = locationResult.getLastLocation();
-                        locations.add(new LatLng(location.getLatitude(), location.getLongitude()));
-                        updateDistance();
-                        updateAvgSpeed();
-                        Log.d(TAG, "onLocationResult: " + location.getLatitude() + ", " + location.getLongitude());
-                    }
-                };
-                fusedLocationProviderClient.requestLocationUpdates(LocationRequest.create()
-                        .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY).setInterval(5000), locationCallback, handler.getLooper());
-            } else {
-                // need to request permission
-                ActivityCompat.requestPermissions(InProgressWorkoutActivity.this,
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        LOCATION_REQUEST_CODE);
-            }
-            return null;
-        }
-    }*/
 }
