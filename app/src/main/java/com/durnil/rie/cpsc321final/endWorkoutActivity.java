@@ -64,8 +64,8 @@ public class endWorkoutActivity extends AppCompatActivity implements OnMapReadyC
             double distance = intent.getDoubleExtra("distance", 0.0);
             double avgSpeed = intent.getDoubleExtra("avgSpeed", 0.0);
             timeTV.setText(time);
-            distanceTV.setText(distance + " miles");
-            avgSpeedTV.setText(avgSpeed + " mi/min");
+            distanceTV.setText(String.format("%.2f", distance) + " miles");
+            avgSpeedTV.setText(String.format("%.2f", avgSpeed) + " mi/min");
         }
 
         saveButton.setOnClickListener(new View.OnClickListener() {

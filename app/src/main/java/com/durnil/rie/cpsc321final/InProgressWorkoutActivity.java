@@ -240,7 +240,7 @@ public class InProgressWorkoutActivity extends AppCompatActivity {
             // in order to use public methods
             BackgroundService.LocalBinder binder = (BackgroundService.LocalBinder) service;
             InProgressWorkoutActivity.this.service = binder.getService();
-            boolean serviceBound = true;
+            serviceBound = true;
         }
 
         @Override

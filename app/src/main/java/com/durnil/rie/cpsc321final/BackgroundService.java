@@ -1,7 +1,6 @@
 package com.durnil.rie.cpsc321final;
 
 import android.Manifest;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -22,6 +21,7 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BackgroundService extends Service {
@@ -52,6 +52,7 @@ public class BackgroundService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        locations = new ArrayList<>();
 
         fusedLocationProviderClient = new FusedLocationProviderClient(this);
         locationCallback = new LocationCallback() {
