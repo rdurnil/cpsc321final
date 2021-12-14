@@ -54,6 +54,7 @@ public class BackgroundService extends Service {
         super.onCreate();
         locations = new ArrayList<>();
 
+        // TODO: implement locations differently in background, not picking up location results currently
         fusedLocationProviderClient = new FusedLocationProviderClient(this);
         locationCallback = new LocationCallback() {
             @Override

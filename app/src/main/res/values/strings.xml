@@ -26,4 +26,8 @@
     <string name="empty_speed">0.0 miles/min</string>
     <string name="empty_distance">0.00 miles</string>
     <string name="end">End</string>
+    <string name="time_data">time data</string>
+    <string name="distance_data">distance data</string>
+    <string name="avg_speed_data">avg speed data</string>
+    <string name="start_workout">Start Workout</string>
 </resources>

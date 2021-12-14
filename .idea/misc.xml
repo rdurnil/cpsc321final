@@ -11,7 +11,11 @@
         <entry key="..\:/Users/jaymi/AndroidStudioProjects/cpsc321final/app/src/main/res/layout/activity_view_prev_workout.xml" value="0.30104166666666665" />
         <entry key="..\:/Users/jaymi/AndroidStudioProjects/cpsc321final/app/src/main/res/layout/item_prev_workouts.xml" value="0.29791666666666666" />
         <entry key="..\:/Users/jaymi/AndroidStudioProjects/cpsc321final/app/src/main/res/layout/list_item_prev_workouts.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/activity_end_workout.xml" value="0.12916666666666668" />
+        <entry key="app/src/main/res/layout/activity_in_progress_workout.xml" value="0.12916666666666668" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.165" />
+        <entry key="app/src/main/res/layout/activity_prev_workout_selection.xml" value="0.12916666666666668" />
+        <entry key="app/src/main/res/layout/list_item_prev_workouts.xml" value="0.12916666666666668" />
       </map>
     </option>
   </component>
