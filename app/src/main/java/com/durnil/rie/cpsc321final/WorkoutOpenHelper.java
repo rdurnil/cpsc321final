@@ -46,7 +46,7 @@ public class WorkoutOpenHelper extends SQLiteOpenHelper {
                 NAME + " TEXT, " +
                 TYPE + " TEXT, " +
                 DATE + " TEXT, " +
-                TIME + " INTEGER, " +
+                TIME + " TEXT, " +
                 DISTANCE + " DOUBLE);";
 
         sqlCreate += "CREATE TABLE " + LATLNG_TABLE + "(" +
@@ -108,7 +108,7 @@ public class WorkoutOpenHelper extends SQLiteOpenHelper {
             String name = cursor.getString(1);
             String type = cursor.getString(2);
             String date = cursor.getString(3);
-            int time = cursor.getInt(4);
+            String time = cursor.getString(4);
             double distance = cursor.getDouble(5);
             Workout workout = new Workout(id, name, type, date, time, distance);
             workouts.add(workout);
@@ -135,7 +135,7 @@ public class WorkoutOpenHelper extends SQLiteOpenHelper {
             String name = cursor.getString(1);
             String type = cursor.getString(2);
             String date = cursor.getString(3);
-            int time = cursor.getInt(4);
+            String time = cursor.getString(4);
             double distance = cursor.getDouble(5);
             workout = new Workout(id, name, type, date, time, distance);
         }

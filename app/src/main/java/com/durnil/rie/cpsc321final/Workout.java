@@ -7,11 +7,20 @@ public class Workout {
     private String workoutName;
     private String type;
     private String date;
-    private int time; // in seconds
+    private String time; // formatted
     private double distance; // in miles
 
-    public Workout(int id, String workoutName, String type, String date, int time, double distance) {
+    public Workout(int id, String workoutName, String type, String date, String time, double distance) {
         this.id = id;
+        this.workoutName = workoutName;
+        this.type = type;
+        this.date = date;
+        this.time = time;
+        this.distance = distance;
+    }
+
+    public Workout(String workoutName, String type, String date, String time, double distance) {
+        this.id = -1;
         this.workoutName = workoutName;
         this.type = type;
         this.date = date;
@@ -51,11 +60,11 @@ public class Workout {
         this.date = date;
     }
 
-    public int getTime() {
+    public String getTime() {
         return time;
     }
 
-    public void setTime(int time) {
+    public void setTime(String time) {
         this.time = time;
     }
 

@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -147,6 +148,7 @@ public class InProgressWorkoutActivity extends AppCompatActivity {
                     intent.putExtra("time", formatSeconds());
                     intent.putExtra("distance", distance);
                     intent.putExtra("avgSpeed", avgSpeed);
+                    intent.putParcelableArrayListExtra("locations", (ArrayList<? extends Parcelable>) locations);
                     startActivity(intent);
                 }
             });

@@ -1,6 +1,9 @@
 package com.durnil.rie.cpsc321final;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -11,6 +14,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -21,6 +25,11 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 /**
  * The endWorkoutActivity class is responsible for taking the user and map data and
@@ -35,6 +44,9 @@ public class endWorkoutActivity extends AppCompatActivity implements OnMapReadyC
     Button deleteButton;
     Button saveButton;
     WorkoutOpenHelper helper;
+    String time;
+    double distance;
+    List<LatLng> locations;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,37 +72,57 @@ public class endWorkoutActivity extends AppCompatActivity implements OnMapReadyC
 
         Intent intent = getIntent();
         if (intent != null) {
-            String time = intent.getStringExtra("time");
-            double distance = intent.getDoubleExtra("distance", 0.0);
+            time = intent.getStringExtra("time");
+            distance = intent.getDoubleExtra("distance", 0.0);
             double avgSpeed = intent.getDoubleExtra("avgSpeed", 0.0);
+            locations = intent.getParcelableArrayListExtra("locations");
             timeTV.setText(time);
             distanceTV.setText(String.format("%.2f", distance) + " miles");
             avgSpeedTV.setText(String.format("%.2f", avgSpeed) + " mi/min");
         }
 
         saveButton.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View view) {
-//                Workout temp = new Workout()
+                String type = typeSpinner.getSelectedItem().toString();
+                if (workoutName.getText().toString().equals("")) {
+                    Toast.makeText(endWorkoutActivity.this, "You must give your workout a name.", Toast.LENGTH_LONG).show();
+                } else {
+                    Workout workout = new Workout(workoutName.getText().toString(), type,
+                            LocalDate.now().toString(), time, distance);
+                    helper.insertWorkout(workout);
+                    Intent intent = new Intent(endWorkoutActivity.this, MainActivity.class);
+                    startActivity(intent);
+                }
+            }
+        });
+
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(endWorkoutActivity.this);
+                builder.setTitle("Delete Workout?").setMessage("Do you want to delete the workout " +
+                        "that you just completed?")
+                        .setPositiveButton("Yes, delete", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent intent = new Intent(endWorkoutActivity.this, MainActivity.class);
+                                startActivity(intent);
+                            }
+                        })
+                        .setNegativeButton("No, don't delete", null);
+                builder.show();
             }
         });
     }
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
-        //When this is ready, change .add to .addAll(helper.getLatLangsById(id))
-        Polyline route = googleMap.addPolyline(new PolylineOptions().clickable(false).add(
-                //THESE ARE TEST VALUES
-                new LatLng(-35.016, 143.321),
-                new LatLng(-34.747, 145.592),
-                new LatLng(-34.364, 147.891),
-                new LatLng(-33.501, 150.217),
-                new LatLng(-32.306, 149.248),
-                new LatLng(-32.491, 147.309)
-        ));
+        Polyline route = googleMap.addPolyline(new PolylineOptions().clickable(false).addAll(locations));
 
         //Update this to use the first lat lng and closer zoom (10?)
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(-23.684, 133.903), 4));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locations.get(locations.size() / 2), 10));
 
         googleMap.setOnPolylineClickListener(this);
     }
