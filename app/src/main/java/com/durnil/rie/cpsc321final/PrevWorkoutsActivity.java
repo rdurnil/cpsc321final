@@ -1,5 +1,6 @@
 package com.durnil.rie.cpsc321final;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -7,6 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,6 +28,7 @@ public class PrevWorkoutsActivity extends AppCompatActivity {
     WorkoutsAdapter adapter = new WorkoutsAdapter();
     WorkoutOpenHelper helper;
     List<Workout> workouts;
+    ActivityResultLauncher<Intent> viewWorkoutLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +41,19 @@ public class PrevWorkoutsActivity extends AppCompatActivity {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         workoutsRV.setLayoutManager(layoutManager);
         workoutsRV.setAdapter(adapter);
+
+        //Setting up launcher:
+        viewWorkoutLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() == Activity.RESULT_OK) {
+                            Intent data = result.getData();
+                            assert data != null;
+                            adapter.notifyDataSetChanged(); //Bad practice
+                        }
+                    }
+                });
     }
 
     class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.WorkoutsViewHolder> {
@@ -53,7 +72,7 @@ public class PrevWorkoutsActivity extends AppCompatActivity {
                 Intent intent = new Intent(PrevWorkoutsActivity.this, PrevWorkoutViewActivity.class);
                 //The indices of these should be lined up:
                 intent.putExtra("workout_id", workouts.get(getAdapterPosition()).getId());
-                startActivity(intent);
+                viewWorkoutLauncher.launch(intent); //Launching the intent
             }
 
             public void updateView (Workout passedWorkout) {

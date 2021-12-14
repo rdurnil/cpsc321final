@@ -78,6 +78,7 @@ public class endWorkoutActivity extends AppCompatActivity implements OnMapReadyC
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
+        //When this is ready, change .add to .addAll(helper.getLatLangsById(id))
         Polyline route = googleMap.addPolyline(new PolylineOptions().clickable(false).add(
                 //THESE ARE TEST VALUES
                 new LatLng(-35.016, 143.321),
