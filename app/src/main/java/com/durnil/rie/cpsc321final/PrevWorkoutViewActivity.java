@@ -120,7 +120,7 @@ public class PrevWorkoutViewActivity extends AppCompatActivity implements OnMapR
         route = googleMap.addPolyline(new PolylineOptions().clickable(false).addAll(latLngList));
         //This next line moves the camera to the first latLng and zooms to level 10
         if (latLngList.size() > 0) {
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLngList.get(0), 10));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLngList.get(0), 15));
             googleMap.setOnPolylineClickListener(this);
         }
     }

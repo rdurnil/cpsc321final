@@ -102,7 +102,7 @@ public class NewWorkoutActivity extends AppCompatActivity implements OnMapReadyC
     public void onMapReady(@NonNull GoogleMap googleMap) {
         MapsInitializer.initialize(NewWorkoutActivity.this);
         map = googleMap;
-        map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+//        map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
         enableUserLocation();
     }
 
