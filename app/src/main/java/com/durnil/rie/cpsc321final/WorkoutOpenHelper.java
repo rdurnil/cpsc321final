@@ -51,12 +51,12 @@ public class WorkoutOpenHelper extends SQLiteOpenHelper {
 
         sqLiteDatabase.execSQL(sqlCreate);
 
-        sqlCreate = "CREATE TABLE " + LATLNG_TABLE + "(" +
+        String sqlCreate2 = "CREATE TABLE " + LATLNG_TABLE + "(" +
                 ID + " INTEGER PRIMARY KEY, " +
                 LATITUDE + " FLOAT, " +
                 LONGITUDE + " FLOAT, " +
                 ORDER_NUM + " INT);";
-        sqLiteDatabase.execSQL(sqlCreate);
+        sqLiteDatabase.execSQL(sqlCreate2);
     }
 
     @Override
