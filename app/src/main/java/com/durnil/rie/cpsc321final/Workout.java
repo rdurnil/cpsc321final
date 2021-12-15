@@ -9,23 +9,26 @@ public class Workout {
     private String date;
     private String time; // formatted
     private double distance; // in miles
+    private double avgSpeed;
 
-    public Workout(int id, String workoutName, String type, String date, String time, double distance) {
+    public Workout(int id, String workoutName, String type, String date, String time, double distance, double avgSpeed) {
         this.id = id;
         this.workoutName = workoutName;
         this.type = type;
         this.date = date;
         this.time = time;
         this.distance = distance;
+        this.avgSpeed = avgSpeed;
     }
 
-    public Workout(String workoutName, String type, String date, String time, double distance) {
+    public Workout(String workoutName, String type, String date, String time, double distance, double avgSpeed) {
         this.id = -1;
         this.workoutName = workoutName;
         this.type = type;
         this.date = date;
         this.time = time;
         this.distance = distance;
+        this.avgSpeed = avgSpeed;
     }
 
     public int getId() {
@@ -74,5 +77,13 @@ public class Workout {
 
     public void setDistance(double distance) {
         this.distance = distance;
+    }
+
+    public double getAvgSpeed() {
+        return avgSpeed;
+    }
+
+    public void setAvgSpeed(double avgSpeed) {
+        this.avgSpeed = avgSpeed;
     }
 }

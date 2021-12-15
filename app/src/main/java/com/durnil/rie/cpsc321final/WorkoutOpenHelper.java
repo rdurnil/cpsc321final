@@ -26,6 +26,7 @@ public class WorkoutOpenHelper extends SQLiteOpenHelper {
     static final String DATE = "date";
     static final String TIME = "time";
     static final String DISTANCE = "distance";
+    static final String AVG_SPEED = "avgSpeed";
 
     /**
      * Constructor for WorkoutOpenHelper
@@ -47,12 +48,13 @@ public class WorkoutOpenHelper extends SQLiteOpenHelper {
                 TYPE + " TEXT, " +
                 DATE + " TEXT, " +
                 TIME + " TEXT, " +
-                DISTANCE + " DOUBLE);";
+                DISTANCE + " DOUBLE, " +
+                AVG_SPEED + " DOUBLE);";
 
         sqLiteDatabase.execSQL(sqlCreate);
 
         sqlCreate = "CREATE TABLE " + LATLNG_TABLE + "(" +
-                ID + " INTEGER PRIMARY KEY, " +
+                ID + " INTEGER, " +
                 LATITUDE + " FLOAT, " +
                 LONGITUDE + " FLOAT, " +
                 ORDER_NUM + " INT);";
@@ -76,6 +78,7 @@ public class WorkoutOpenHelper extends SQLiteOpenHelper {
         contentValues.put(DATE, workout.getDate());
         contentValues.put(TIME, workout.getTime());
         contentValues.put(DISTANCE, workout.getDistance());
+        contentValues.put(AVG_SPEED, workout.getAvgSpeed());
 
         SQLiteDatabase db = getWritableDatabase();
         db.insert(WORKOUT_TABLE, null, contentValues);
@@ -90,7 +93,7 @@ public class WorkoutOpenHelper extends SQLiteOpenHelper {
     public Cursor getSelectAllCursor() {
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.query(WORKOUT_TABLE,
-                new String[]{ID, NAME, TYPE, DATE, TIME, DISTANCE},
+                new String[]{ID, NAME, TYPE, DATE, TIME, DISTANCE, AVG_SPEED},
                 null, null, null, null,
                 null);
         return cursor;
@@ -111,7 +114,8 @@ public class WorkoutOpenHelper extends SQLiteOpenHelper {
             String date = cursor.getString(3);
             String time = cursor.getString(4);
             double distance = cursor.getDouble(5);
-            Workout workout = new Workout(id, name, type, date, time, distance);
+            double avgSpeed = cursor.getDouble(6);
+            Workout workout = new Workout(id, name, type, date, time, distance, avgSpeed);
             workouts.add(workout);
         }
         return workouts;
@@ -128,7 +132,7 @@ public class WorkoutOpenHelper extends SQLiteOpenHelper {
     public Workout getSelectWorkoutById(int id) {
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.query(WORKOUT_TABLE,
-                new String[]{ID, NAME, TYPE, DATE, TIME, DISTANCE},
+                new String[]{ID, NAME, TYPE, DATE, TIME, DISTANCE, AVG_SPEED},
                 ID + "=?", new String[]{"" + id},
                 null, null, null);
         Workout workout = null;
@@ -138,9 +142,27 @@ public class WorkoutOpenHelper extends SQLiteOpenHelper {
             String date = cursor.getString(3);
             String time = cursor.getString(4);
             double distance = cursor.getDouble(5);
-            workout = new Workout(id, name, type, date, time, distance);
+            double avgSpeed = cursor.getDouble(6);
+            workout = new Workout(id, name, type, date, time, distance, avgSpeed);
         }
         return workout;
+    }
+
+    public int getSelectWorkoutIdByData(String name, String type, String date, String time, double distance, double avgSpeed) {
+        int id = -1;
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.query(WORKOUT_TABLE,
+                new String[]{ID},
+                NAME + "=? AND " + TYPE + "=? AND " + DATE + "=? AND " + TIME
+                        + "=? AND " + DISTANCE + "=? AND " + AVG_SPEED + "=?",
+                new String[]{name, type, date, time, Double.toString(distance), Double.toString(avgSpeed)},
+                null, null, null);
+        // in case there are multiple with the same data, go to last one since this is called right
+        // after an insert
+        while (cursor.moveToNext()) {
+            id = cursor.getInt(0);
+        }
+        return id;
     }
 
     /**
@@ -203,16 +225,14 @@ public class WorkoutOpenHelper extends SQLiteOpenHelper {
     public List<LatLng> getLatLangsById(int id) {
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.query(LATLNG_TABLE,
-                new String[]{ID, LATITUDE, LONGITUDE, ORDER_NUM},
+                new String[]{LATITUDE, LONGITUDE},
                 ID + "=?", new String[]{"" + id},
                 null, null, null);
         List<LatLng> latLngs = new ArrayList<>();
         LatLng temp;
         while (cursor.moveToNext()) {
-            int tempId = cursor.getInt(1);
-            Double latitude = cursor.getDouble(2);
-            Double longitude = cursor.getDouble(3);
-            int orderNum = cursor.getInt(4);
+            Double latitude = cursor.getDouble(0);
+            Double longitude = cursor.getDouble(1);
             temp = new LatLng(latitude, longitude);
             latLngs.add(temp);
         }
