@@ -122,8 +122,11 @@ public class endWorkoutActivity extends AppCompatActivity implements OnMapReadyC
         Polyline route = googleMap.addPolyline(new PolylineOptions().clickable(false).addAll(locations));
 
         //Update this to use the first lat lng and closer zoom (10?)
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locations.get(locations.size() / 2), 10));
-
+        if (locations.size() > 1) {
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locations.get(locations.size() / 2), 10));
+        } else {
+            Toast.makeText(this, "Workout Too Short", Toast.LENGTH_SHORT).show();
+        }
         googleMap.setOnPolylineClickListener(this);
     }
 
