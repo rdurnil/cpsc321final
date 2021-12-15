@@ -21,13 +21,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -112,7 +108,6 @@ public class InProgressWorkoutActivity extends AppCompatActivity {
             pauseButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(InProgressWorkoutActivity.this, "pause button", Toast.LENGTH_SHORT).show();
                     if (pauseButton.getText().toString().equals("Pause")) {
                         pauseButton.setText(R.string.resume);
                         handler.removeCallbacks(timerRunnable);
