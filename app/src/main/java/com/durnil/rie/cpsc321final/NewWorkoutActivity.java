@@ -22,65 +22,122 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
 import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NewWorkoutActivity extends AppCompatActivity {
+public class NewWorkoutActivity extends AppCompatActivity implements OnMapReadyCallback,
+        GoogleMap.OnMyLocationClickListener {
 
-    private FusedLocationProviderClient fusedLocationProviderClient;
+    private GoogleMap map;
+    private FusedLocationProviderClient fusedLocationClient;
     private static final int LOCATION_REQUEST_CODE = 1;
-    private List<LatLng> locations;
+    private LatLng userLatLng;
     private static final String TAG = "WorkoutAppTag";
-    Button startWorkoutButton;
+    private Button startWorkoutButton;
+    private Handler handler;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_workout);
 
-        locations = new ArrayList<>();
+        if (ActivityCompat.checkSelfPermission(NewWorkoutActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(NewWorkoutActivity.this,
+                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            map.setMyLocationEnabled(true);
+            map.setOnMyLocationClickListener(this);
+        }
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapViewNewWorkout);
+        mapFragment.getMapAsync(this);
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        fusedLocationClient.getLastLocation()
+                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        if (location != null) {
+                            Log.d(TAG, "Successful change");
+                            userLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+                            System.out.println(userLatLng.latitude);
+                        }
+                    }
+                });
 
         startWorkoutButton = findViewById(R.id.startWorkoutButton);
-
         startWorkoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent (NewWorkoutActivity.this, InProgressWorkoutActivity.class);
+                Intent intent = new Intent(NewWorkoutActivity.this, InProgressWorkoutActivity.class);
                 startActivity(intent);
             }
         });
 
-        Handler handler = new Handler(Looper.getMainLooper());
+        handler = new Handler(Looper.getMainLooper());
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
                 handler.postDelayed(this, 5000);
             }
         };
+    }
 
+    @Override
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+        MapsInitializer.initialize(NewWorkoutActivity.this);
+        map = googleMap;
+        map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        enableUserLocation();
+    }
+
+    private void enableUserLocation() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
-            LocationCallback locationCallback = new LocationCallback() {
-                @Override
-                public void onLocationResult(@NonNull LocationResult locationResult) {
-                    super.onLocationResult(locationResult);
-                    Location location = locationResult.getLastLocation();
-                    locations.add(new LatLng(location.getLatitude(), location.getLongitude()));
-                    Log.d(TAG, "onLocationResult: " + location.getLatitude() + ", " + location.getLongitude());
-                }
-            };
-//            fusedLocationProviderClient.requestLocationUpdates(LocationRequest.create()
-//                    .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY).setInterval(5), locationCallback, handler.getLooper());
+            map.setMyLocationEnabled(true);
+            map.setOnMyLocationClickListener(this);
         } else {
-            // need to request permission
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     LOCATION_REQUEST_CODE);
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == LOCATION_REQUEST_CODE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                enableUserLocation();
+            }
+            else {
+                Toast.makeText(this, "Location permission request denied", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    @Override
+    public void onMyLocationClick(@NonNull Location location) {
+        MarkerOptions newMarker = new MarkerOptions();
+        newMarker.title("User Location");
+        newMarker.snippet("You Are Here");
+        map.addMarker(newMarker);
+        LatLng latLng = new LatLng(location.getLongitude(), location.getLatitude());
+        newMarker.position(latLng);
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15.0f);
+        map.moveCamera(cameraUpdate);
+    }
 }

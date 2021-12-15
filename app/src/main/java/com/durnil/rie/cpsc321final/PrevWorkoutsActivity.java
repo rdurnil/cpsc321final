@@ -65,6 +65,9 @@ public class PrevWorkoutsActivity extends AppCompatActivity {
                 super(itemView);
                 workoutName = itemView.findViewById(R.id.workoutNameText);
                 workoutDate = itemView.findViewById(R.id.workoutDateText);
+
+                workoutName.setOnClickListener(this);
+                workoutDate.setOnClickListener(this);
             }
 
             @Override
