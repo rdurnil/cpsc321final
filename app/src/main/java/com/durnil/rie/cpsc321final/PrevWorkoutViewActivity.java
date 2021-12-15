@@ -98,8 +98,8 @@ public class PrevWorkoutViewActivity extends AppCompatActivity implements OnMapR
     private void updateViews() {
         nameTV.setText(workout.getWorkoutName());
         timeTV.setText(workout.getTime());
-        distTV.setText(Double.toString(workout.getDistance()));
-        speedTV.setText(Double.toString(workout.getAvgSpeed()));
+        distTV.setText(String.format("%.2f", workout.getDistance()) + " miles");
+        speedTV.setText(String.format("%.2f", workout.getAvgSpeed()) + " min/mi");
     }
 
     @Override
