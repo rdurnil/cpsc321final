@@ -192,9 +192,11 @@ public class InProgressWorkoutActivity extends AppCompatActivity {
     }
 
     private void updateAvgSpeed() {
-        avgSpeed = ((double) seconds / 60.0) / distance;
-        TextView tv = findViewById(R.id.avgSpeedDisplayTextView);
-        tv.setText(String.format("%.2f", avgSpeed) + " min/mi");
+        if (!(distance < 0.01)) {
+            avgSpeed = ((double) seconds / 60.0) / distance;
+            TextView tv = findViewById(R.id.avgSpeedDisplayTextView);
+            tv.setText(String.format("%.2f", avgSpeed) + " min/mi");
+        }
     }
 
     @Override
