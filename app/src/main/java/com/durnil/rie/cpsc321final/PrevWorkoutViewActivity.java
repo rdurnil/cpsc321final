@@ -70,13 +70,12 @@ public class PrevWorkoutViewActivity extends AppCompatActivity implements OnMapR
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 Intent deleteIntent = new Intent(PrevWorkoutViewActivity.this, PrevWorkoutsActivity.class);
-                                deleteIntent.putExtra("workout_id", workout.getId());
 
                                 helper.deleteWorkoutById(workout.getId());
 
                                 PrevWorkoutViewActivity.this.setResult(Activity.RESULT_OK, deleteIntent);
                                     Toast.makeText(PrevWorkoutViewActivity.this, "Workout Deleted", Toast.LENGTH_SHORT).show();
-                                PrevWorkoutViewActivity.this.finish();
+                                startActivity(deleteIntent);
                             }
                         }).setNegativeButton("Cancel", null);
                 builder.show();
@@ -96,10 +95,14 @@ public class PrevWorkoutViewActivity extends AppCompatActivity implements OnMapR
 
     //Helper function to update all of the views with the text from the DB to not take up onCreate()
     private void updateViews() {
-        nameTV.setText(workout.getWorkoutName());
-        timeTV.setText(workout.getTime());
-        distTV.setText(String.format("%.2f", workout.getDistance()) + " miles");
-        speedTV.setText(String.format("%.2f", workout.getAvgSpeed()) + " min/mi");
+        if (workout != null) {
+            nameTV.setText(workout.getWorkoutName());
+            timeTV.setText(workout.getTime());
+            distTV.setText(String.format("%.2f", workout.getDistance()) + " miles");
+            speedTV.setText(String.format("%.2f", workout.getAvgSpeed()) + " min/mi");
+            return;
+        }
+        PrevWorkoutViewActivity.this.finish();
     }
 
     @Override
