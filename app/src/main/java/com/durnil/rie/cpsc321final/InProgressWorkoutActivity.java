@@ -55,6 +55,7 @@ public class InProgressWorkoutActivity extends AppCompatActivity {
     LocationCallback locationCallback;
     Intent serviceIntent;
 
+    boolean pauseEndWorkout = false;
     boolean serviceBound;
     BackgroundService service;
     private FusedLocationProviderClient fusedLocationProviderClient;
@@ -120,6 +121,7 @@ public class InProgressWorkoutActivity extends AppCompatActivity {
                             fusedLocationProviderClient.removeLocationUpdates(locationCallback);
                         }
                         handler = null;
+                        pauseEndWorkout = true;
                     } else {
                         pauseButton.setText(R.string.pause);
                         if (handler == null) {
@@ -127,6 +129,7 @@ public class InProgressWorkoutActivity extends AppCompatActivity {
                             handler.postDelayed(timerRunnable, 1000);
                             handler.postDelayed(locationRunnable, 5000);
                         }
+                        pauseEndWorkout = false;
                     }
                 }
             });
@@ -143,6 +146,7 @@ public class InProgressWorkoutActivity extends AppCompatActivity {
                         fusedLocationProviderClient.removeLocationUpdates(locationCallback);
                     }
                     handler = null;
+                    pauseEndWorkout = true;
 
                     Intent intent = new Intent(InProgressWorkoutActivity.this, endWorkoutActivity.class);
                     intent.putExtra("time", formatSeconds());
@@ -201,11 +205,12 @@ public class InProgressWorkoutActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        //If the user pressed the runServiceButton the timer should continue even if it was stopped
-        serviceIntent = new Intent(InProgressWorkoutActivity.this, BackgroundService.class);
-        serviceIntent.putExtra("seconds", seconds);
-        startService(serviceIntent);
-        bindService(serviceIntent, connection, Context.BIND_AUTO_CREATE);
+        if (!pauseEndWorkout) {
+            serviceIntent = new Intent(InProgressWorkoutActivity.this, BackgroundService.class);
+            serviceIntent.putExtra("seconds", seconds);
+            startService(serviceIntent);
+            bindService(serviceIntent, connection, Context.BIND_AUTO_CREATE);
+        }
     }
 
     @Override
