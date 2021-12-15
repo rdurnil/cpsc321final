@@ -100,6 +100,7 @@ public class BackgroundService extends Service {
         // ends the timer
         handler.removeCallbacks(timerRunnable);
         handler.removeCallbacks(locationRunnable);
+        fusedLocationProviderClient.removeLocationUpdates(locationCallback);
         handler = null;
         super.onDestroy();
     }

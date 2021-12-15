@@ -46,6 +46,7 @@ public class endWorkoutActivity extends AppCompatActivity implements OnMapReadyC
     WorkoutOpenHelper helper;
     String time;
     double distance;
+    double avgSpeed;
     List<LatLng> locations;
 
     @Override
@@ -74,11 +75,11 @@ public class endWorkoutActivity extends AppCompatActivity implements OnMapReadyC
         if (intent != null) {
             time = intent.getStringExtra("time");
             distance = intent.getDoubleExtra("distance", 0.0);
-            double avgSpeed = intent.getDoubleExtra("avgSpeed", 0.0);
+            avgSpeed = intent.getDoubleExtra("avgSpeed", 0.0);
             locations = intent.getParcelableArrayListExtra("locations");
             timeTV.setText(time);
             distanceTV.setText(String.format("%.2f", distance) + " miles");
-            avgSpeedTV.setText(String.format("%.2f", avgSpeed) + " mi/min");
+            avgSpeedTV.setText(String.format("%.2f", avgSpeed) + " min/mi");
         }
 
         saveButton.setOnClickListener(new View.OnClickListener() {
@@ -90,8 +91,15 @@ public class endWorkoutActivity extends AppCompatActivity implements OnMapReadyC
                     Toast.makeText(endWorkoutActivity.this, "You must give your workout a name.", Toast.LENGTH_LONG).show();
                 } else {
                     Workout workout = new Workout(workoutName.getText().toString(), type,
-                            LocalDate.now().toString(), time, distance);
+                            LocalDate.now().toString(), time, distance, avgSpeed);
                     helper.insertWorkout(workout);
+                    int workoutId = helper.getSelectWorkoutIdByData(workoutName.getText().toString(), type,
+                            LocalDate.now().toString(), time, distance, avgSpeed);
+                    int i = 0;
+                    for (LatLng latLng : locations) {
+                        helper.insertLatLng(workoutId, latLng, i);
+                        i++;
+                    }
                     Intent intent = new Intent(endWorkoutActivity.this, MainActivity.class);
                     startActivity(intent);
                 }
@@ -123,7 +131,11 @@ public class endWorkoutActivity extends AppCompatActivity implements OnMapReadyC
 
         //Update this to use the first lat lng and closer zoom (10?)
         if (locations.size() > 1) {
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locations.get(locations.size() / 2), 10));
+            if (distance < 15) {
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locations.get(locations.size() / 2), 12));
+            } else {
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locations.get(locations.size() / 2), 10));
+            }
         } else {
             Toast.makeText(this, "Workout Too Short", Toast.LENGTH_SHORT).show();
         }

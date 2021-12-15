@@ -98,9 +98,8 @@ public class PrevWorkoutViewActivity extends AppCompatActivity implements OnMapR
     private void updateViews() {
         nameTV.setText(workout.getWorkoutName());
         timeTV.setText(workout.getTime());
-        distTV.setText(Double.toString(workout.getDistance()));
-//        speedTV.setText(workout.getAverageSpeed());
-        speedTV.setText("GET SPEED");
+        distTV.setText(String.format("%.2f", workout.getDistance()) + " miles");
+        speedTV.setText(String.format("%.2f", workout.getAvgSpeed()) + " min/mi");
     }
 
     @Override
@@ -116,9 +115,9 @@ public class PrevWorkoutViewActivity extends AppCompatActivity implements OnMapR
         Polyline route;
         route = googleMap.addPolyline(new PolylineOptions().clickable(false).addAll(latLngList));
         //This next line moves the camera to the first latLng and zooms to level 10
-        if (latLngList.size() > 1) {
+        if (latLngList.size() > 0) {
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLngList.get(0), 10));
+            googleMap.setOnPolylineClickListener(this);
         }
-        googleMap.setOnPolylineClickListener(this);
     }
 }
