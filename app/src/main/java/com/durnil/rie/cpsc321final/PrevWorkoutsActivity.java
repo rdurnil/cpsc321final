@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -54,6 +55,18 @@ public class PrevWorkoutsActivity extends AppCompatActivity {
                         }
                     }
                 });
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                this.finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.WorkoutsViewHolder> {
@@ -74,7 +87,7 @@ public class PrevWorkoutsActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(PrevWorkoutsActivity.this, PrevWorkoutViewActivity.class);
                 //The indices of these should be lined up:
-                intent.putExtra("workout_id", workouts.get(getAdapterPosition()).getId());
+                intent.putExtra("workout_id", workouts.get(getItemCount() - getAdapterPosition() - 1).getId());
                 viewWorkoutLauncher.launch(intent); //Launching the intent
             }
 
@@ -93,8 +106,10 @@ public class PrevWorkoutsActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(@NonNull WorkoutsViewHolder holder, int position) {
-            Workout workout = helper.getSelectAllWorkouts().get(position);
-            holder.updateView(workout);
+            if (workouts.size() > 0) {
+                Workout workout = helper.getSelectAllWorkouts().get(getItemCount() - position - 1);
+                holder.updateView(workout);
+            }
         }
 
         @Override
