@@ -10,8 +10,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginBottom="50dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:text="@string/time"
         android:textAlignment="center"
         android:textSize="48sp"
@@ -40,7 +40,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginBottom="50dp"
+        android:layout_marginBottom="8dp"
         android:text="@string/distance"
         android:textAlignment="center"
         android:textSize="34sp"
@@ -57,7 +57,7 @@
         android:layout_marginStart="16dp"
         android:text="@string/empty_distance"
         android:textAlignment="textEnd"
-        android:textSize="30sp"
+        android:textSize="34sp"
         app:layout_constraintBottom_toTopOf="@+id/avgSpeedTextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -68,10 +68,10 @@
     <TextView
         android:id="@+id/avgSpeedTextView"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginStart="8dp"
-        android:layout_marginBottom="250dp"
-        android:text="Avg. Speed"
+        android:layout_marginTop="8dp"
+        android:text="@string/avg_speed2"
         android:textAlignment="center"
         android:textSize="34sp"
         app:layout_constraintBottom_toTopOf="@+id/inProgPauseButton"
@@ -87,8 +87,7 @@
         android:layout_marginStart="16dp"
         android:text="@string/empty_speed"
         android:textAlignment="textEnd"
-        android:textSize="30sp"
-        app:layout_constraintBottom_toBottomOf="@+id/avgSpeedTextView"
+        android:textSize="34sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/avgSpeedTextView"
@@ -100,11 +99,11 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:text="@string/pause"
         app:layout_constraintBottom_toTopOf="@+id/inProgEndButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/avgSpeedTextView" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/inProgEndButton"
@@ -116,7 +115,6 @@
         android:text="@string/end"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/inProgPauseButton" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -33,4 +33,5 @@
     <string name="start_new_workout">NEW WORKOUT</string>
     <string name="get_location">Get Location</string>
     <string name="welcome">Welcome!</string>
+    <string name="avg_speed2">Avg. Speed:</string>
 </resources>
