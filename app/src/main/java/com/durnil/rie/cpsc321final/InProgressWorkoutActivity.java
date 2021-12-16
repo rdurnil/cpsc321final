@@ -185,6 +185,9 @@ public class InProgressWorkoutActivity extends AppCompatActivity {
             LatLng location2 = locations.get(locations.size() - 1);
             double latDiff = location2.latitude - location1.latitude;
             double lngDiff = location2.longitude - location1.longitude;
+            // pythagorean theorem to calculate hypotenuse: a^2 + b^2 = c^2
+            // 1 degree of latLng = 69.2 miles
+            // source: https://sciencing.com/convert-degrees-latitude-miles-5744407.html
             distance += ((Math.sqrt(Math.pow(latDiff, 2) + Math.pow(lngDiff, 2))) * 69.2);
         }
         TextView tv = findViewById(R.id.distanceDisplayTextView);
